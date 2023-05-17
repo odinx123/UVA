@@ -36,6 +36,7 @@ int main() {
             else
                 printf("%.3f\n", win_num[i]/(every_win-no_win[i]));
         }
+        cout << "\n";
     }
 
     return 0;
