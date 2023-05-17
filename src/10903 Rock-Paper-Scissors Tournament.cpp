@@ -3,6 +3,7 @@
 using namespace std;
 
 int main() {
+    bool flag = false;  // flag for the first input
     int n = 0, k = 0;
     while (cin >> n) {
         if (n == 0) break;
@@ -28,6 +29,9 @@ int main() {
             }
         }
 
+        if (flag) cout << "\n";
+        else flag = true;
+
         double every_win = k*(n-1.0);
         for (int i = 0; i < n; ++i) {
             if (no_win[i] == every_win) {
@@ -36,7 +40,6 @@ int main() {
             else
                 printf("%.3f\n", win_num[i]/(every_win-no_win[i]));
         }
-        cout << "\n";
     }
 
     return 0;
