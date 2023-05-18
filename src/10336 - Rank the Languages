@@ -10,16 +10,16 @@ struct Data {
     char c;
 };
 
-void dfs(vector<vector<char>>& gra, vector<vector<int>>& mark, const int &cur_mark, char& target, int y, int x) {
-    if (mark[y][x] != 0) return;
+void dfs(vector<vector<char>>& gra, vector<vector<char>>& mark, char& target, int y, int x) {
+    if (mark[y][x] != '0') return;
     if (gra[y][x] != target) return;
 
-    mark[y][x] = cur_mark;
+    mark[y][x] = '1';
 
-    if (y > 0) dfs(gra, mark, cur_mark, target, y-1, x);
-    if (y < gra.size()-1) dfs(gra, mark, cur_mark, target, y+1, x);
-    if (x > 0) dfs(gra, mark, cur_mark, target, y, x-1);
-    if (x < gra[0].size()-1) dfs(gra, mark, cur_mark, target, y, x+1);
+    if (y > 0) dfs(gra, mark, target, y-1, x);
+    if (y < gra.size()-1) dfs(gra, mark, target, y+1, x);
+    if (x > 0) dfs(gra, mark, target, y, x-1);
+    if (x < gra[0].size()-1) dfs(gra, mark, target, y, x+1);
 }
 
 int main() {
@@ -38,11 +38,11 @@ int main() {
             }
         }
 
-        vector<vector<int>> mark(H, vector<int>(W, 0));
+        vector<vector<char>> mark(H, vector<char>(W, '0'));
         for (int i = 0; i < H; ++i) {
             for (int j = 0; j < W; ++j) {
-                if (mark[i][j] == 0) {
-                    dfs(gra, mark, ++cur_mark, gra[i][j], i, j);
+                if (mark[i][j] == '0') {
+                    dfs(gra, mark, gra[i][j], i, j);
                     if (cnt.find(gra[i][j]) == cnt.end())
                         cnt[gra[i][j]].first = cur_mark;
                     ++cnt[gra[i][j]].second;
