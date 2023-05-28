@@ -12,7 +12,7 @@ int main() {
             cout << "Boring!" << endl;
             continue;
         }
-        while (!flag && n != 1) {
+        while (n != 1) {
             if (n % m == 0) {
                 ans.push_back(n / m);
                 n /= m;
