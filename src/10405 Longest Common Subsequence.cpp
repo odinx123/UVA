@@ -4,7 +4,8 @@ using namespace std;
 
 int main() {
     string s1, s2;
-    while (cin >> s1 >> s2) {
+    // 輸出會有只有換行的
+    while (getline(cin, s1) && getline(cin, s2)) {
         // 對於每列都是s1的字元跑過s2的每個字元，而對於每行都是s2的字元跑過s1的每個字元
         // 對於公共子序列，是要有順序的，所以每個col都不能先後面的col則順序不對(row當然也是)
         vector<vector<int>> LCM(s1.size() + 1, vector<int>(s2.size() + 1, 0));
