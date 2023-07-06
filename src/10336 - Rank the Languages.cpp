@@ -1,89 +1,58 @@
 #include <iostream>
 #include <vector>
-#include <unordered_map>
 #include <algorithm>
+#include <map>
 using namespace std;
 
-struct Data {
-    int mark;
-    int cnt;
-    char c;
-};
+void check(const vector<vector<char>>& grid, vector<vector<char>>& state, int y, int x, char pre) {
+    if (y < 0 || y >= grid.size() || x < 0 || x >= grid[0].size() || state[y][x] == '1')
+        return;
+    if (grid[y][x] != pre)
+        return;
 
-void dfs(vector<vector<char>>& gra, vector<vector<char>>& mark, char& target, int y, int x) {
-    if (mark[y][x] != '0') return;
-    if (gra[y][x] != target) return;
+    state[y][x] = '1';
+    pre = grid[y][x];
 
-    mark[y][x] = '1';
-
-    if (y > 0) dfs(gra, mark, target, y-1, x);
-    if (y < gra.size()-1) dfs(gra, mark, target, y+1, x);
-    if (x > 0) dfs(gra, mark, target, y, x-1);
-    if (x < gra[0].size()-1) dfs(gra, mark, target, y, x+1);
+    check(grid, state, y, x + 1, pre);
+    check(grid, state, y + 1, x, pre);
+    check(grid, state, y - 1, x, pre);
+    check(grid, state, y, x - 1, pre);
 }
 
 int main() {
-    int n = 0;
-    cin >> n;
-    for (int k = 0; k < n; ++k) {
-        int H = 0, W = 0, cur_mark = 0;
-        cin >> H >> W;
-        vector<vector<char>> gra(H, vector<char>(W, ' '));
-        // char, <mark_num, cnt>
-        unordered_map<char, pair<int, int>> cnt;
-
-        for (int i = 0; i < H; ++i) {
-            for (int j = 0; j < W; ++j) {
-                cin >> gra[i][j];
+    int T = 0;
+    cin >> T;
+    for (int k = 1; k <= T; ++k) {
+        int m, n;
+        cin >> m >> n;
+        vector<vector<char>> grid(m, vector<char>(n));
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                cin >> grid[i][j];
             }
         }
 
-        vector<vector<char>> mark(H, vector<char>(W, '0'));
-        for (int i = 0; i < H; ++i) {
-            for (int j = 0; j < W; ++j) {
-                if (mark[i][j] == '0') {
-                    dfs(gra, mark, gra[i][j], i, j);
-                    if (cnt.find(gra[i][j]) == cnt.end())
-                        cnt[gra[i][j]].first = cur_mark;
-                    ++cnt[gra[i][j]].second;
+        map<char, int> cnt;
+        vector<vector<char>> state(m, vector<char>(n, '0'));
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (state[i][j] == '0') {
+                    check(grid, state, i, j, grid[i][j]);
+                    ++cnt[grid[i][j]];
                 }
             }
         }
 
-        vector<Data> ans;
-        for (const auto& d : cnt) {
-            ans.push_back({d.second.first, d.second.second, d.first});
-        }
-        sort(ans.begin(), ans.end(), [](Data& a, Data& b) {
-            if (a.cnt == b.cnt)
-                return a.c < b.c;
-            return a.cnt > b.cnt;
+        vector<pair<char, int>> res(cnt.begin(), cnt.end());
+        stable_sort(res.begin(), res.end(), [] (const pair<char, int>& a, const pair<char, int>& b) {
+            return a.second > b.second;
         });
 
-        cout << "World #" << k+1 << endl;
-        for (const auto& d : ans) {
-            cout << d.c << ": " << d.cnt << endl;
+        cout << "World #" << k << endl;
+        for (const auto& p : res) {
+            cout << p.first << ": " << p.second << endl;
         }
     }
 
-    // system("pause");
     return 0;
 }
-/*
-2
-4 8
-ttuuttdd
-ttuuttdd
-uuttuudd
-uuttuudd
-9 9
-bbbbbbbbb
-aaaaaaaab
-bbbbbbbab
-baaaaacab
-bacccccab
-bacbbbcab
-bacccccab
-baaaaaaab
-bbbbbbbbb
-*/
